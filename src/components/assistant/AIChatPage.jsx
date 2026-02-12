@@ -120,7 +120,7 @@ export default function AIChatPage() {
           onDeleteChat={handleDeleteChat}
         />
 
-        <div className="md:col-span-3 relative">
+        <div className="md:col-span-3 relative h-full">
           <div className="absolute top-4 right-4 z-10">
             <button onClick={() => setShowPersonalityModal(true)} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors" title="Personality & Context">
               <Icons.smile className="w-5 h-5 text-yellow-400" />

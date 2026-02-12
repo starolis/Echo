@@ -16,7 +16,7 @@ export default function ChatWindow({ currentChat, aiInput, setAiInput, aiLoading
   };
 
   return (
-    <div className="md:col-span-3 bg-slate-800/30 backdrop-blur rounded-xl border border-white/5 flex flex-col">
+    <div className="md:col-span-3 h-full bg-slate-800/30 backdrop-blur rounded-xl border border-white/5 flex flex-col">
       <div className="p-4 border-b border-white/5 flex items-center justify-between">
         <div>
           <h2 className="font-semibold">AI Writing Assistant</h2>
