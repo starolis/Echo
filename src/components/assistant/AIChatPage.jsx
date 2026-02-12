@@ -100,23 +100,22 @@ export default function AIChatPage() {
       const aiResponse = await sendChatMessage(inputText, context);
       const aiMessage = { role: 'ai', text: aiResponse };
 
-      const updatedSessions = sessionsWithUserMsg.map(c => {
-        if (c.id === currentId) {
-          return { ...c, messages: [...c.messages, aiMessage], updatedAt: new Date().toISOString() };
-        }
-        return c;
-      });
-      updateUser({ chatSessions: updatedSessions, currentChatId: currentId });
+      updateUser(prev => ({
+        chatSessions: (prev.chatSessions || []).map(c =>
+          c.id === currentId ? { ...c, messages: [...c.messages, aiMessage], updatedAt: new Date().toISOString() } : c
+        ),
+        currentChatId: currentId,
+      }));
     } catch (error) {
       console.error('AI Error:', error);
       const errorMessage = { role: 'ai', text: 'Sorry, I encountered an error. Please try again.' };
-      const updatedSessions = sessionsWithUserMsg.map(c => {
-        if (c.id === currentId) {
-          return { ...c, messages: [...c.messages, errorMessage], updatedAt: new Date().toISOString() };
-        }
-        return c;
-      });
-      updateUser({ chatSessions: updatedSessions, currentChatId: currentId });
+
+      updateUser(prev => ({
+        chatSessions: (prev.chatSessions || []).map(c =>
+          c.id === currentId ? { ...c, messages: [...c.messages, errorMessage], updatedAt: new Date().toISOString() } : c
+        ),
+        currentChatId: currentId,
+      }));
     }
 
     setAiLoading(false);
