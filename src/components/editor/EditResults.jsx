@@ -70,7 +70,7 @@ export default function EditResults({ editResult, highlightedChangeIdx, setHighl
           <h4 className="text-sm font-medium text-slate-400 mb-3 uppercase tracking-wide">Improved Version</h4>
           <div className="bg-slate-900/50 rounded-xl p-4 max-h-64 overflow-y-auto">
             <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">
-              {highlightedChangeIdx !== null && editResult.changes[highlightedChangeIdx] ? (
+              {highlightedChangeIdx !== null && editResult.changes[highlightedChangeIdx]?.revised && editResult.result ? (
                 editResult.result.split(editResult.changes[highlightedChangeIdx].revised).map((part, i, arr) => (
                   <React.Fragment key={i}>
                     {part}

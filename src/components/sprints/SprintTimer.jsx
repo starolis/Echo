@@ -25,7 +25,7 @@ export default function SprintTimer({ sprintTime, setSprintTime, sprintWordGoal,
         <div className="mt-6 h-3 bg-slate-700 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-green-500 to-emerald-400 transition-all duration-300"
-            style={{ width: `${Math.min((sprintWords / sprintWordGoal) * 100, 100)}%` }}
+            style={{ width: `${sprintWordGoal > 0 ? Math.min((sprintWords / sprintWordGoal) * 100, 100) : 0}%` }}
           />
         </div>
       </div>

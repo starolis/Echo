@@ -1,7 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import Icons from '../icons/Icons';
-import { PLANS } from '../../constants/plans';
 
 const NAV = [
   { id: 'home', icon: Icons.home, label: 'Dashboard' },

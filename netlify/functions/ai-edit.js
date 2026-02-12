@@ -108,7 +108,7 @@ ${vocabInstruction ? `\n**Vocabulary:** ${vocabInstruction}` : ''}
           result: parsed.editedText || text,
           changes: parsed.changes || [],
           feedback: parsed.summary || 'Edits applied.',
-          stats: parsed.stats || { wordsBefore: wordCount, wordsAfter: parsed.editedText?.split(/\s+/).length || 0, changesCount: parsed.changes?.length || 0 },
+          stats: parsed.stats || { wordsBefore: wordCount, wordsAfter: parsed.editedText?.split(/\s+/).filter(w => w).length || 0, changesCount: parsed.changes?.length || 0 },
           error: false
         }), { status: 200, headers: { 'Content-Type': 'application/json' } });
       }
@@ -120,7 +120,7 @@ ${vocabInstruction ? `\n**Vocabulary:** ${vocabInstruction}` : ''}
       result: responseText,
       changes: [],
       feedback: 'Edits applied (detailed changes unavailable).',
-      stats: { wordsBefore: wordCount, wordsAfter: responseText.split(/\s+/).length, changesCount: 0 },
+      stats: { wordsBefore: wordCount, wordsAfter: responseText.split(/\s+/).filter(w => w).length, changesCount: 0 },
       error: false
     }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 

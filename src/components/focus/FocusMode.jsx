@@ -10,13 +10,16 @@ export default function FocusMode({ focusGoal, focusAmbiance, focusShowStats, fo
   return (
     <div className="fixed inset-0 bg-slate-950 z-50 flex flex-col">
       <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between opacity-30 hover:opacity-100 transition-opacity">
-        <button onClick={onExit} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white">
+        <button onClick={() => {
+          if (focusText.trim() && !window.confirm('You have unsaved writing. Exit focus mode?')) return;
+          onExit();
+        }} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white">
           <Icons.x className="w-5 h-5" />
         </button>
         {focusShowStats && (
           <div className="flex items-center gap-6 text-sm text-slate-400">
             <span>{wordCount} / {focusGoal} words</span>
-            <span>{Math.round((wordCount / focusGoal) * 100)}%</span>
+            <span>{focusGoal > 0 ? Math.round((wordCount / focusGoal) * 100) : 0}%</span>
           </div>
         )}
         <div className="flex items-center gap-2">
@@ -27,7 +30,7 @@ export default function FocusMode({ focusGoal, focusAmbiance, focusShowStats, fo
       <div className="absolute top-0 left-0 right-0 h-1 bg-slate-800">
         <div
           className="h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-300"
-          style={{ width: `${Math.min((wordCount / focusGoal) * 100, 100)}%` }}
+          style={{ width: `${focusGoal > 0 ? Math.min((wordCount / focusGoal) * 100, 100) : 0}%` }}
         />
       </div>
 

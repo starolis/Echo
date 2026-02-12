@@ -33,7 +33,7 @@ export default function Settings() {
               <img src={user.profileImage} alt="" className="w-20 h-20 rounded-full object-cover" />
             ) : (
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-2xl font-bold">
-                {user.name?.[0]?.toUpperCase()}
+                {user.name?.[0]?.toUpperCase() || '?'}
               </div>
             )}
             <button onClick={() => fileInputRef.current?.click()} className="absolute bottom-0 right-0 bg-slate-700 hover:bg-slate-600 p-2 rounded-full transition-colors border-2 border-slate-900">

@@ -37,7 +37,7 @@ export default function GoalModal({ selectedDate, goalForm, setGoalForm, onSave,
             <label className="block text-sm text-slate-400 mb-2">
               Target ({goalForm.type === 'words' ? 'words' : 'minutes'})
             </label>
-            <input type="number" value={goalForm.target} onChange={e => setGoalForm(prev => ({ ...prev, target: Number(e.target.value) }))} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500" />
+            <input type="number" min="1" value={goalForm.target} onChange={e => setGoalForm(prev => ({ ...prev, target: Math.max(1, Number(e.target.value) || 1) }))} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500" />
           </div>
 
           <div>
