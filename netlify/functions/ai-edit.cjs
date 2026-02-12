@@ -10,31 +10,39 @@ const EDIT_TOOLS = [
   { id: 'dialogue', name: 'Dialogue' },
 ];
 
-export default async (req) => {
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+exports.handler = async (event) => {
+  const headers = { 'Content-Type': 'application/json' };
+
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({
-      result: '',
-      changes: [],
-      feedback: 'API key not configured. Set ANTHROPIC_API_KEY in environment variables.',
-      error: true,
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    return {
+      statusCode: 200, headers,
+      body: JSON.stringify({
+        result: '',
+        changes: [],
+        feedback: 'API key not configured. Set ANTHROPIC_API_KEY in environment variables.',
+        error: true,
+      })
+    };
   }
 
   try {
-    const { text, toolId, selectedOptions, context = {} } = await req.json();
+    const { text, toolId, selectedOptions, context = {} } = JSON.parse(event.body);
 
     if (!text || !text.trim()) {
-      return new Response(JSON.stringify({
-        result: text,
-        changes: [],
-        feedback: 'Enter some text to edit.',
-        error: true,
-      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      return {
+        statusCode: 200, headers,
+        body: JSON.stringify({
+          result: text,
+          changes: [],
+          feedback: 'Enter some text to edit.',
+          error: true,
+        })
+      };
     }
 
     const { genre = 'Literary Fiction' } = context;
@@ -104,37 +112,42 @@ ${vocabInstruction ? `\n**Vocabulary:** ${vocabInstruction}` : ''}
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const parsed = JSON.parse(jsonMatch[0]);
-        return new Response(JSON.stringify({
-          result: parsed.editedText || text,
-          changes: parsed.changes || [],
-          feedback: parsed.summary || 'Edits applied.',
-          stats: parsed.stats || { wordsBefore: wordCount, wordsAfter: parsed.editedText?.split(/\s+/).filter(w => w).length || 0, changesCount: parsed.changes?.length || 0 },
-          error: false
-        }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        return {
+          statusCode: 200, headers,
+          body: JSON.stringify({
+            result: parsed.editedText || text,
+            changes: parsed.changes || [],
+            feedback: parsed.summary || 'Edits applied.',
+            stats: parsed.stats || { wordsBefore: wordCount, wordsAfter: parsed.editedText?.split(/\s+/).filter(w => w).length || 0, changesCount: parsed.changes?.length || 0 },
+            error: false
+          })
+        };
       }
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
     }
 
-    return new Response(JSON.stringify({
-      result: responseText,
-      changes: [],
-      feedback: 'Edits applied (detailed changes unavailable).',
-      stats: { wordsBefore: wordCount, wordsAfter: responseText.split(/\s+/).filter(w => w).length, changesCount: 0 },
-      error: false
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    return {
+      statusCode: 200, headers,
+      body: JSON.stringify({
+        result: responseText,
+        changes: [],
+        feedback: 'Edits applied (detailed changes unavailable).',
+        stats: { wordsBefore: wordCount, wordsAfter: responseText.split(/\s+/).filter(w => w).length, changesCount: 0 },
+        error: false
+      })
+    };
 
   } catch (error) {
     console.error('AI Edit Error:', error);
-    return new Response(JSON.stringify({
-      result: '',
-      changes: [],
-      feedback: `Error: ${error.message}`,
-      error: true,
-    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+    return {
+      statusCode: 200, headers,
+      body: JSON.stringify({
+        result: '',
+        changes: [],
+        feedback: `Error: ${error.message}`,
+        error: true,
+      })
+    };
   }
-};
-
-export const config = {
-  path: "/.netlify/functions/ai-edit"
 };

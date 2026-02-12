@@ -1,18 +1,17 @@
-export default async (req) => {
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+exports.handler = async (event) => {
+  const headers = { 'Content-Type': 'application/json' };
+
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return new Response(JSON.stringify({ response: null }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return { statusCode: 200, headers, body: JSON.stringify({ response: null }) };
   }
 
   try {
-    const { message, context } = await req.json();
+    const { message, context } = JSON.parse(event.body);
     const { userName = 'Writer', genre = 'Literary Fiction', personality = 'helpful', useEmojis = false, chatHistory = [], customContext = '' } = context || {};
 
     const personalityDescriptions = {
@@ -23,7 +22,6 @@ export default async (req) => {
       professional: 'You are formal and precise with structured, actionable advice.',
     };
 
-    // Bug fix #7: Include customContext in the system prompt
     let systemPrompt = `You are an AI writing assistant called Echo. You help writers with their craft and can chat about anything.
 
 Personality: ${personalityDescriptions[personality] || personalityDescriptions.helpful}
@@ -66,28 +64,17 @@ Guidelines:
     if (response.ok) {
       const data = await response.json();
       if (data.content && data.content[0]?.text) {
-        return new Response(JSON.stringify({ response: data.content[0].text }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        });
+        return {
+          statusCode: 200, headers,
+          body: JSON.stringify({ response: data.content[0].text })
+        };
       }
     }
 
-    // If API call didn't return a valid response, return null so client uses fallback
-    return new Response(JSON.stringify({ response: null }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return { statusCode: 200, headers, body: JSON.stringify({ response: null }) };
 
   } catch (error) {
     console.error('AI Chat Error:', error);
-    return new Response(JSON.stringify({ response: null }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return { statusCode: 200, headers, body: JSON.stringify({ response: null }) };
   }
-};
-
-export const config = {
-  path: "/.netlify/functions/ai-chat"
 };
