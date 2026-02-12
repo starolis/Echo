@@ -12,7 +12,7 @@ export default function CalendarPage() {
   // Bug fix #6: Use user.writingGoals as single source of truth
   const [writingGoals, setWritingGoals] = useState(user?.writingGoals || {});
   const [showGoalModal, setShowGoalModal] = useState(false);
-  const [goalForm, setGoalForm] = useState({ type: 'words', target: 500, time: '' });
+  const [goalForm, setGoalForm] = useState({ type: 'words', target: 500, time: '', description: '', notes: '' });
 
   const getDateKey = (date) => date.toISOString().split('T')[0];
 

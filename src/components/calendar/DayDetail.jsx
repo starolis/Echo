@@ -26,15 +26,20 @@ export default function DayDetail({ selectedDate, writingGoals, userWritingGoals
         <div className="space-y-4">
           <div className={`p-4 rounded-xl ${goal.completed ? 'bg-green-500/10 border border-green-500/20' : 'bg-amber-500/10 border border-amber-500/20'}`}>
             <div className="flex items-center justify-between mb-2">
-              <span className="font-medium">{goal.type === 'words' ? 'Word Goal' : 'Time Goal'}</span>
+              <span className="font-medium">{goal.type === 'custom' ? 'Custom Goal' : goal.type === 'words' ? 'Word Goal' : 'Time Goal'}</span>
               {goal.completed ? (
                 <span className="text-green-400 text-sm flex items-center gap-1"><Icons.check className="w-4 h-4" /> Done</span>
               ) : (
                 <span className="text-amber-400 text-sm">Pending</span>
               )}
             </div>
-            <p className="text-2xl font-bold">{goal.target} {goal.type === 'words' ? 'words' : 'minutes'}</p>
+            {goal.type === 'custom' ? (
+              <p className="text-lg font-bold">{goal.description || 'Custom goal'}</p>
+            ) : (
+              <p className="text-2xl font-bold">{goal.target} {goal.type === 'words' ? 'words' : 'minutes'}</p>
+            )}
             {goal.time && <p className="text-sm text-slate-400 mt-1">Scheduled: {goal.time}</p>}
+            {goal.notes && <p className="text-sm text-slate-400 mt-2 italic">{goal.notes}</p>}
           </div>
           <button
             onClick={() => onToggleComplete(dateKey)}
