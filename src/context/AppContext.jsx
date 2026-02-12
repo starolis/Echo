@@ -70,9 +70,18 @@ export function AppProvider({ children }) {
 
   const updateUser = (changes) => {
     if (!user) return;
-    const updated = { ...user, ...changes };
-    setUser(updated);
-    setData(prev => ({ ...prev, users: { ...prev.users, [user.username]: updated } }));
+    if (typeof changes === 'function') {
+      setUser(prev => {
+        const resolved = changes(prev);
+        const updated = { ...prev, ...resolved };
+        setData(d => ({ ...d, users: { ...d.users, [prev.username]: updated } }));
+        return updated;
+      });
+    } else {
+      const updated = { ...user, ...changes };
+      setUser(updated);
+      setData(prev => ({ ...prev, users: { ...prev.users, [user.username]: updated } }));
+    }
   };
 
   const getTotalWords = () =>

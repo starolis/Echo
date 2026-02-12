@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import Icons from '../icons/Icons';
-import { sendChatMessage } from '../../services/api';
+import { sendChatMessage, generateChatTitle } from '../../services/api';
 import ChatSidebar from './ChatSidebar';
 import ChatWindow from './ChatWindow';
 import PersonalityModal from './PersonalityModal';
@@ -63,14 +63,27 @@ export default function AIChatPage() {
 
     const currentChat = sessions.find(c => c.id === currentId);
 
+    const isFirstMessage = currentChat?.messages.length === 0;
+
     const sessionsWithUserMsg = sessions.map(c => {
       if (c.id === currentId) {
-        const title = c.messages.length === 0 ? inputText.slice(0, 35) + (inputText.length > 35 ? '...' : '') : c.title;
+        const title = isFirstMessage ? inputText.slice(0, 35) + (inputText.length > 35 ? '...' : '') : c.title;
         return { ...c, messages: [...c.messages, userMessage], title, updatedAt: new Date().toISOString() };
       }
       return c;
     });
     updateUser({ chatSessions: sessionsWithUserMsg, currentChatId: currentId });
+
+    // Generate a descriptive title for new conversations (fire and forget)
+    if (isFirstMessage) {
+      generateChatTitle(inputText).then(title => {
+        if (title) {
+          updateUser(prev => ({
+            chatSessions: (prev.chatSessions || []).map(c => c.id === currentId ? { ...c, title } : c)
+          }));
+        }
+      });
+    }
 
     const context = {
       userName: user.name,

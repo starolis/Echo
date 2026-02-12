@@ -61,3 +61,27 @@ export async function sendChatMessage(message, context) {
   // Smart fallback responses — student's original creative work
   return generateFallbackResponse(message, context);
 }
+
+/**
+ * Generate a descriptive chat title from the first message
+ */
+export async function generateChatTitle(message) {
+  try {
+    const response = await fetch('/.netlify/functions/ai-title', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.title) return data.title;
+    }
+  } catch (err) {
+    console.log('Title generation unavailable');
+  }
+
+  // Fallback: use first few words of the message
+  const words = message.split(/\s+/).slice(0, 6).join(' ');
+  return words + (message.split(/\s+/).length > 6 ? '...' : '');
+}
