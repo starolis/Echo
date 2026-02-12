@@ -42,7 +42,7 @@ export default function ChatWindow({ currentChat, aiInput, setAiInput, aiLoading
         ) : (
           currentChat?.messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user' ? 'bg-gradient-to-r from-indigo-600 via-indigo-800 to-slate-900 ring-1 ring-indigo-500/30' : 'bg-white/5'}`}>
+              <div className={`max-w-[80%] p-4 rounded-2xl ${m.role === 'user' ? 'bg-gradient-to-r from-indigo-600 via-indigo-800 to-slate-900 ring-1 ring-indigo-500/30' : 'bg-slate-800/60 border border-white/5'}`}>
                 <p className="text-sm whitespace-pre-wrap leading-relaxed">{m.text}</p>
               </div>
             </div>

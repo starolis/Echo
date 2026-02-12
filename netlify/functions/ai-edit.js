@@ -90,7 +90,7 @@ ${vocabInstruction ? `\n**Vocabulary:** ${vocabInstruction}` : ''}
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5-20250929',
         max_tokens: 3000,
         system: systemPrompt,
         messages: [{ role: 'user', content: `Edit this text:\n\n${text}` }]
