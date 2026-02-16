@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { save, load } from '../services/storage';
 import { DEFAULT_SETTINGS } from '../constants/settings';
 
@@ -63,29 +63,30 @@ export function AppProvider({ children }) {
     if (loaded) save(data);
   }, [data, loaded]);
 
-  const notify = (msg, type = 'success') => {
+  const notify = useCallback((msg, type = 'success') => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 3000);
-  };
+  }, []);
 
-  const updateUser = (changes) => {
-    if (!user) return;
-    if (typeof changes === 'function') {
-      setUser(prev => {
+  const updateUser = useCallback((changes) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      if (typeof changes === 'function') {
         const resolved = changes(prev);
         const updated = { ...prev, ...resolved };
         setData(d => ({ ...d, users: { ...d.users, [prev.username]: updated } }));
         return updated;
-      });
-    } else {
-      const updated = { ...user, ...changes };
-      setUser(updated);
-      setData(prev => ({ ...prev, users: { ...prev.users, [user.username]: updated } }));
-    }
-  };
+      } else {
+        const updated = { ...prev, ...changes };
+        setData(d => ({ ...d, users: { ...d.users, [prev.username]: updated } }));
+        return updated;
+      }
+    });
+  }, []);
 
-  const getTotalWords = () =>
-    user?.projects?.reduce((s, p) => s + (p.content?.split(/\s+/).filter(w => w).length || 0), 0) || 0;
+  const getTotalWords = useCallback(() =>
+    user?.projects?.reduce((s, p) => s + (p.content?.split(/\s+/).filter(w => w).length || 0), 0) || 0,
+  [user?.projects]);
 
   const handleLogin = (username, password) => {
     const u = data.users[username];

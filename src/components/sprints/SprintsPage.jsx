@@ -20,6 +20,12 @@ export default function SprintsPage() {
   const [currentStreak, setCurrentStreak] = useState(user?.sprintStreak || 0);
 
   const sprintIntervalRef = useRef(null);
+  const sprintTextRef = useRef(sprintText);
+
+  // Keep ref in sync with state so interval callback always sees current text
+  useEffect(() => {
+    sprintTextRef.current = sprintText;
+  }, [sprintText]);
 
   // Bug fix #4: Persist sprint history and streak to user data
   useEffect(() => {
@@ -35,7 +41,7 @@ export default function SprintsPage() {
           if (prev <= 1) {
             clearInterval(sprintIntervalRef.current);
             setSprintRunning(false);
-            const wordsWritten = sprintText.split(/\s+/).filter(w => w).length - sprintStartWords;
+            const wordsWritten = sprintTextRef.current.split(/\s+/).filter(w => w).length - sprintStartWords;
             const newSprint = {
               id: Date.now(),
               date: new Date().toISOString(),

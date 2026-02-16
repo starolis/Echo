@@ -4,16 +4,38 @@ import Icons from '../icons/Icons';
 export default function FocusMode({ focusGoal, focusAmbiance, focusShowStats, focusTypewriter, onExit }) {
   // Bug fix #5: Focus text state lives here and persists while focus is open
   const [focusText, setFocusText] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const wordCount = focusText.split(/\s+/).filter(w => w).length;
+
+  const handleCopyText = async () => {
+    if (!focusText.trim()) return;
+    try {
+      await navigator.clipboard.writeText(focusText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = focusText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleExit = () => {
+    if (focusText.trim() && !window.confirm('You have unsaved writing. Exit focus mode?\n\nTip: Use the copy button to save your text first.')) return;
+    onExit();
+  };
 
   return (
     <div className="fixed inset-0 bg-slate-950 z-50 flex flex-col">
       <div className="absolute top-0 left-0 right-0 p-4 flex items-center justify-between opacity-30 hover:opacity-100 transition-opacity">
-        <button onClick={() => {
-          if (focusText.trim() && !window.confirm('You have unsaved writing. Exit focus mode?')) return;
-          onExit();
-        }} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white">
+        <button onClick={handleExit} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 hover:text-white">
           <Icons.x className="w-5 h-5" />
         </button>
         {focusShowStats && (
@@ -23,6 +45,14 @@ export default function FocusMode({ focusGoal, focusAmbiance, focusShowStats, fo
           </div>
         )}
         <div className="flex items-center gap-2">
+          {focusText.trim() && (
+            <button
+              onClick={handleCopyText}
+              className={`text-sm px-3 py-1.5 rounded-lg transition-all ${copied ? 'bg-green-500/20 text-green-400' : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white'}`}
+            >
+              {copied ? 'Copied!' : 'Copy text'}
+            </button>
+          )}
           <span className="text-sm text-slate-500">{focusAmbiance !== 'none' ? '🎵 ' + focusAmbiance : ''}</span>
         </div>
       </div>

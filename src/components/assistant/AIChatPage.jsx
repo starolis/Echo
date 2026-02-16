@@ -76,10 +76,17 @@ export default function AIChatPage() {
 
     // Generate a descriptive title for new conversations (fire and forget)
     if (isFirstMessage) {
+      const placeholderTitle = inputText.slice(0, 35) + (inputText.length > 35 ? '...' : '');
       generateChatTitle(inputText).then(title => {
         if (title) {
           updateUser(prev => ({
-            chatSessions: (prev.chatSessions || []).map(c => c.id === currentId ? { ...c, title } : c)
+            chatSessions: (prev.chatSessions || []).map(c => {
+              // Only update if the chat still exists and still has the placeholder title
+              if (c.id === currentId && c.title === placeholderTitle) {
+                return { ...c, title };
+              }
+              return c;
+            })
           }));
         }
       });

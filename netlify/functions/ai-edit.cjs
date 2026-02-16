@@ -105,6 +105,22 @@ ${vocabInstruction ? `\n**Vocabulary:** ${vocabInstruction}` : ''}
       })
     });
 
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => 'Unknown error');
+      console.error('Anthropic API error:', response.status, errorBody);
+      return {
+        statusCode: 200, headers,
+        body: JSON.stringify({
+          result: text,
+          changes: [],
+          feedback: response.status === 429
+            ? 'The AI service is busy. Please wait a moment and try again.'
+            : 'The AI editing service encountered an error. Please try again.',
+          error: true,
+        })
+      };
+    }
+
     const data = await response.json();
     const responseText = data.content?.[0]?.text || '';
 

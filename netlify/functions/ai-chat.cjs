@@ -11,7 +11,16 @@ exports.handler = async (event) => {
   }
 
   try {
+    if (!event.body) {
+      return { statusCode: 200, headers, body: JSON.stringify({ response: null }) };
+    }
+
     const { message, context } = JSON.parse(event.body);
+
+    if (!message || !message.trim()) {
+      return { statusCode: 200, headers, body: JSON.stringify({ response: null }) };
+    }
+
     const { userName = 'Writer', genre = 'Literary Fiction', personality = 'helpful', useEmojis = false, chatHistory = [], customContext = '' } = context || {};
 
     const personalityDescriptions = {
