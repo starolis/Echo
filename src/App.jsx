@@ -17,6 +17,7 @@ import ExtraToolsPage from './components/tools/ExtraToolsPage';
 import Settings from './components/settings/Settings';
 import WriterQuiz from './components/quiz/WriterQuiz';
 import AdminStatsOverlay from './components/admin/AdminStatsOverlay';
+import AIGrader from './components/grader/AIGrader';
 
 function AppContent() {
   const { data, user, view, setView, settings, updateUser } = useApp();
@@ -120,6 +121,7 @@ function AppContent() {
           )}
           {view === 'calendar' && <CalendarPage />}
           {view === 'analytics' && <Analytics />}
+          {view === 'grader' && <AIGrader />}
           {view === 'tools' && <ExtraToolsPage />}
           {view === 'settings' && <Settings />}
         </main>

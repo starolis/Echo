@@ -24,6 +24,8 @@ const createUser = (username, name, pass) => ({
   completedTasks: [],
   lastLogin: null,
   loginCount: 0,
+  gradingHistory: [],
+  preferredGradeFormat: 'report-card',
 });
 
 const createInitialData = () => ({
@@ -85,6 +87,8 @@ export function AppProvider({ children }) {
         if (u.quizResults === undefined) u.quizResults = null;
         if (u.lastLogin === undefined) u.lastLogin = null;
         if (u.loginCount === undefined) u.loginCount = 0;
+          if (u.gradingHistory === undefined) u.gradingHistory = [];
+          if (u.preferredGradeFormat === undefined) u.preferredGradeFormat = 'report-card';
       });
       setData(saved);
     }
