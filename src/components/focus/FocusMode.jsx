@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icons from '../icons/Icons';
+import { AMBIANCE_SOUNDS } from '../../constants/ambianceSounds';
 
 export default function FocusMode({ focusGoal, focusAmbiance, focusShowStats, focusTypewriter, onExit }) {
   // Bug fix #5: Focus text state lives here and persists while focus is open
   const [focusText, setFocusText] = useState('');
   const [copied, setCopied] = useState(false);
+  const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    if (focusAmbiance === 'none') return;
+    if (muted) return;
+
+    const audio = new Audio(AMBIANCE_SOUNDS[focusAmbiance]);
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.play().catch(() => {});
+
+    return () => {
+      audio.pause();
+      audio.src = '';
+    };
+  }, [focusAmbiance, muted]);
 
   const wordCount = focusText.split(/\s+/).filter(w => w).length;
 
@@ -53,7 +70,11 @@ export default function FocusMode({ focusGoal, focusAmbiance, focusShowStats, fo
               {copied ? 'Copied!' : 'Copy text'}
             </button>
           )}
-          <span className="text-sm text-slate-500">{focusAmbiance !== 'none' ? '🎵 ' + focusAmbiance : ''}</span>
+          {focusAmbiance !== 'none' && (
+            <button onClick={() => setMuted(m => !m)} className="text-sm px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+              {muted ? '🔇' : '🎵'} {focusAmbiance}
+            </button>
+          )}
         </div>
       </div>
 
