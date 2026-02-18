@@ -22,6 +22,8 @@ const createUser = (username, name, pass) => ({
   sprintStreak: 0,
   quizResults: null,
   completedTasks: [],
+  lastLogin: null,
+  loginCount: 0,
 });
 
 const createInitialData = () => ({
@@ -59,6 +61,8 @@ const createInitialData = () => ({
         },
       },
       completedTasks: [],
+      lastLogin: '2026-02-17T20:30:00.000Z',
+      loginCount: 12,
     },
   },
   posts: [],
@@ -110,7 +114,10 @@ export function AppProvider({ children }) {
   const handleLogin = (username, password) => {
     const u = data.users[username];
     if (u && u.pass === password) {
-      setUser(u);
+      const now = new Date().toISOString();
+      const updated = { ...u, lastLogin: now, loginCount: (u.loginCount || 0) + 1 };
+      setData(d => ({ ...d, users: { ...d.users, [username]: updated } }));
+      setUser(updated);
       return true;
     }
     notify('Invalid credentials', 'error');
