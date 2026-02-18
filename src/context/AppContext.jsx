@@ -134,8 +134,10 @@ export function AppProvider({ children }) {
       return false;
     }
     const newUser = createUser(username, name, password);
-    setData(prev => ({ ...prev, users: { ...prev.users, [username]: newUser } }));
-    setUser(newUser);
+    const now = new Date().toISOString();
+    const withLogin = { ...newUser, lastLogin: now, loginCount: 1 };
+    setData(prev => ({ ...prev, users: { ...prev.users, [username]: withLogin } }));
+    setUser(withLogin);
     notify('Welcome to Echo!');
     return true;
   };
