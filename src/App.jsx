@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from './context/AppContext';
 import AuthScreen from './components/auth/AuthScreen';
 import Header from './components/layout/Header';
@@ -16,9 +16,10 @@ import Analytics from './components/analytics/Analytics';
 import ExtraToolsPage from './components/tools/ExtraToolsPage';
 import Settings from './components/settings/Settings';
 import WriterQuiz from './components/quiz/WriterQuiz';
+import AdminStatsOverlay from './components/admin/AdminStatsOverlay';
 
 function AppContent() {
-  const { user, view, setView, settings, updateUser } = useApp();
+  const { data, user, view, setView, settings, updateUser } = useApp();
 
   const themeClass = settings.theme === 'light' ? 'theme-light' : '';
   const fontSizeClass = settings.fontSize === 'small' ? 'text-sm' : settings.fontSize === 'large' ? 'text-lg' : 'text-base';
@@ -33,6 +34,20 @@ function AppContent() {
   const [focusAmbiance, setFocusAmbiance] = useState('none');
   const [focusShowStats, setFocusShowStats] = useState(true);
   const [focusTypewriter, setFocusTypewriter] = useState(false);
+
+  // Admin stats overlay state
+  const [showAdminStats, setShowAdminStats] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.key === '4' && user?.username === 'claudia') {
+        e.preventDefault();
+        setShowAdminStats(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [user?.username]);
 
   if (!user) return <AuthScreen />;
 
@@ -110,6 +125,9 @@ function AppContent() {
         </main>
       </div>
 
+      {showAdminStats && (
+        <AdminStatsOverlay users={data.users} onClose={() => setShowAdminStats(false)} />
+      )}
       <Toast />
     </div>
   );
