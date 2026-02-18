@@ -21,7 +21,7 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ response: null }) };
     }
 
-    const { userName = 'Writer', genre = 'Literary Fiction', personality = 'helpful', useEmojis = false, chatHistory = [], customContext = '' } = context || {};
+    const { userName = 'Writer', genre = 'Literary Fiction', personality = 'helpful', useEmojis = false, chatHistory = [], customContext = '', quizProfile = null } = context || {};
 
     const personalityDescriptions = {
       helpful: 'You are supportive, informative, and encouraging. You give thorough but clear answers.',
@@ -43,6 +43,17 @@ Guidelines:
 - Keep responses focused and helpful
 - Only reference the user's specific work if THEY bring it up first
 - Do NOT assume or inject details about their projects unless they mention them`;
+
+    if (quizProfile) {
+      systemPrompt += `\n\nWriter's profile (from their quiz):
+- Writer type: ${quizProfile.writerType || 'creative writer'}
+- Experience: ${quizProfile.experience || 'intermediate'}
+- Preferred genres: ${(quizProfile.preferredGenres || []).join(', ') || 'various'}
+- Strengths: ${(quizProfile.strengths || []).join(', ') || 'not specified'}
+- Areas to improve: ${(quizProfile.weaknesses || []).join(', ') || 'not specified'}
+- Goals: ${(quizProfile.goals || []).join(', ') || 'general improvement'}
+Use this profile to personalize your advice, but don't mention the quiz unless asked.`;
+    }
 
     if (customContext && customContext.trim()) {
       systemPrompt += `\n\nUser's custom context (use this to personalize responses when relevant):\n${customContext}`;

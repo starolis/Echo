@@ -101,6 +101,7 @@ export default function AIChatPage() {
       customContext: aiCustomContext,
       useEmojis: aiUseEmojis,
       chatHistory: currentChat?.messages || [],
+      quizProfile: user.quizResults?.profile || null,
     };
 
     try {
