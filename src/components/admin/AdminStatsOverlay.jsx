@@ -1,6 +1,11 @@
 import React, { useMemo, useEffect } from 'react';
 import Icons from '../icons/Icons';
 
+// Helper: max value for a distribution, used for percentage bars
+function maxOf(dist) {
+  return dist.length > 0 ? dist[0][1] : 1;
+}
+
 // Helper: count occurrences and return sorted [label, count] pairs
 function tally(items) {
   const map = {};
@@ -80,8 +85,6 @@ export default function AdminStatsOverlay({ users, onClose }) {
     };
   }, [users]);
 
-  // Max value for a distribution, used for percentage bars
-  const maxOf = (dist) => (dist.length > 0 ? dist[0][1] : 1);
 
   return (
     <div

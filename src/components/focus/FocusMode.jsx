@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Icons from '../icons/Icons';
 import { AMBIANCE_SOUNDS } from '../../constants/ambianceSounds';
 
@@ -7,21 +7,32 @@ export default function FocusMode({ focusGoal, focusAmbiance, focusShowStats, fo
   const [focusText, setFocusText] = useState('');
   const [copied, setCopied] = useState(false);
   const [muted, setMuted] = useState(false);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (focusAmbiance === 'none') return;
-    if (muted) return;
+    const url = AMBIANCE_SOUNDS[focusAmbiance];
+    if (!url) return;
 
-    const audio = new Audio(AMBIANCE_SOUNDS[focusAmbiance]);
+    const audio = new Audio(url);
     audio.loop = true;
     audio.volume = 0.5;
+    audio.muted = muted;
     audio.play().catch(() => {});
+    audioRef.current = audio;
 
     return () => {
       audio.pause();
       audio.src = '';
+      audioRef.current = null;
     };
-  }, [focusAmbiance, muted]);
+  }, [focusAmbiance]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = muted;
+    }
+  }, [muted]);
 
   const wordCount = focusText.split(/\s+/).filter(w => w).length;
 
