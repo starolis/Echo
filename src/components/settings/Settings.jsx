@@ -70,7 +70,7 @@ export default function Settings() {
                 <span key={s} className="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">{s}</span>
               ))}
             </div>
-            <button onClick={() => updateUser({ quizResults: null })}
+            <button onClick={() => updateUser({ quizResults: null, completedTasks: [] })}
               className="text-sm bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors text-slate-300">
               Retake Quiz
             </button>

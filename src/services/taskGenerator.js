@@ -20,7 +20,7 @@ const TASK_TEMPLATES = [
   { signal: 'habit', match: 'rarely', title: 'Do a Quick Sprint', description: 'Try a 5-minute writing sprint to build momentum.', difficulty: 'easy', view: 'sprints' },
   { signal: 'habit', match: 'sometimes', title: 'Schedule Writing Time', description: 'Set 3 writing goals on your calendar for this week.', difficulty: 'easy', view: 'calendar' },
   { signal: 'habit', match: 'morning', title: 'Morning Sprint', description: 'Start your day with a 10-minute writing sprint.', difficulty: 'medium', view: 'sprints' },
-  { signal: 'habit', match: 'night', title: 'Evening Focus Session', description: 'Try a focus mode session before bed tonight.', difficulty: 'medium', view: 'focus' },
+  { signal: 'habit', match: 'evening', title: 'Evening Focus Session', description: 'Try a focus mode session before bed tonight.', difficulty: 'medium', view: 'focus' },
 
   // Strength-based tasks
   { signal: 'strength', match: 'Dialogue', title: 'Write a Dialogue Scene', description: 'Use your dialogue skills to write a conversation that reveals character.', difficulty: 'medium', view: 'editor' },

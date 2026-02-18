@@ -10,9 +10,19 @@ const DIFFICULTY_STYLES = {
 };
 
 export default function Dashboard({ onContinueProject, onNewProject }) {
-  const { user, setView, updateUser, getTotalWords } = useApp();
+  const { user, setView, updateUser, notify, getTotalWords } = useApp();
   const [taskPage, setTaskPage] = useState(0);
   const totalWords = getTotalWords();
+
+  const tasks = useMemo(
+    () => generateTasks(user.quizResults?.profile, user.completedTasks || []),
+    [user.quizResults?.profile, user.completedTasks]
+  );
+
+  const handleCompleteTask = (title) => {
+    updateUser({ completedTasks: [...(user.completedTasks || []), title] });
+    notify('Task completed!');
+  };
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -56,15 +66,10 @@ export default function Dashboard({ onContinueProject, onNewProject }) {
       </div>
 
       {/* Personalized Tasks */}
-      {user.quizResults?.profile && (() => {
-        const tasks = generateTasks(user.quizResults.profile, user.completedTasks || []);
+      {tasks.length > 0 && (() => {
         const TASKS_PER_PAGE = 3;
         const totalPages = Math.ceil(tasks.length / TASKS_PER_PAGE);
         const visible = tasks.slice(taskPage * TASKS_PER_PAGE, (taskPage + 1) * TASKS_PER_PAGE);
-
-        const handleComplete = (title) => {
-          updateUser({ completedTasks: [...(user.completedTasks || []), title] });
-        };
 
         return (
           <div className="bg-slate-800/30 backdrop-blur rounded-xl border border-white/5 overflow-hidden">
@@ -85,7 +90,7 @@ export default function Dashboard({ onContinueProject, onNewProject }) {
               )}
             </div>
             <div className="divide-y divide-white/5">
-              {visible.map((task, i) => (
+              {visible.map(task => (
                 <div key={task.title} className="p-4 flex items-center gap-4 hover:bg-white/5 transition-colors">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -96,13 +101,10 @@ export default function Dashboard({ onContinueProject, onNewProject }) {
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <button onClick={() => setView(task.view)} className="text-sm bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg transition-colors">Go</button>
-                    <button onClick={() => handleComplete(task.title)} className="text-sm bg-white/5 hover:bg-white/10 text-slate-400 px-3 py-1.5 rounded-lg transition-colors">Done</button>
+                    <button onClick={() => handleCompleteTask(task.title)} className="text-sm bg-white/5 hover:bg-white/10 text-slate-400 px-3 py-1.5 rounded-lg transition-colors">Done</button>
                   </div>
                 </div>
               ))}
-              {visible.length === 0 && (
-                <div className="p-8 text-center text-slate-500">All tasks completed! Great work.</div>
-              )}
             </div>
           </div>
         );
