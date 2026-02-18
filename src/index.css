@@ -8,3 +8,76 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Light theme overrides */
+.theme-light {
+  color-scheme: light;
+}
+
+.theme-light .bg-slate-800\/30,
+.theme-light .bg-slate-800\/50 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme-light .border-white\/5,
+.theme-light .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.theme-light .text-white {
+  color: #1e293b !important;
+}
+
+.theme-light .text-slate-400 {
+  color: #64748b !important;
+}
+
+.theme-light .text-slate-300 {
+  color: #475569 !important;
+}
+
+.theme-light .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.theme-light .bg-slate-900\/50 {
+  background-color: rgba(241, 245, 249, 0.8) !important;
+}
+
+.theme-light .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+.theme-light .hover\:bg-white\/5:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.theme-light .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.theme-light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+.theme-light .backdrop-blur,
+.theme-light .backdrop-blur-xl,
+.theme-light .backdrop-blur-2xl {
+  backdrop-filter: blur(12px);
+}
+
+.theme-light .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.theme-light select,
+.theme-light input,
+.theme-light textarea {
+  background-color: #f1f5f9 !important;
+  color: #1e293b !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.theme-light ::placeholder {
+  color: #94a3b8 !important;
+}

@@ -16,7 +16,11 @@ import Analytics from './components/analytics/Analytics';
 import Settings from './components/settings/Settings';
 
 function AppContent() {
-  const { user, view, setView } = useApp();
+  const { user, view, setView, settings } = useApp();
+
+  const themeClass = settings.theme === 'light' ? 'theme-light' : '';
+  const fontSizeClass = settings.fontSize === 'small' ? 'text-sm' : settings.fontSize === 'large' ? 'text-lg' : 'text-base';
+  const fontFamilyClass = settings.fontFamily === 'serif' ? 'font-serif' : settings.fontFamily === 'mono' ? 'font-mono' : 'font-sans';
 
   // Project state shared between dashboard and projects view
   const [editingProjectId, setEditingProjectId] = useState(null);
@@ -40,12 +44,14 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white">
+    <div className={`min-h-screen ${fontSizeClass} ${fontFamilyClass} ${themeClass} ${settings.theme === 'light' ? 'bg-gray-50 text-slate-900' : 'bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white'}`}>
       {/* Background effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[150px]" />
-      </div>
+      {settings.theme !== 'light' && (
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[150px]" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[150px]" />
+        </div>
+      )}
 
       <Header />
 
