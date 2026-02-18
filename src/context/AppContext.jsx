@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { save, load } from '../services/storage';
 import { DEFAULT_SETTINGS } from '../constants/settings';
 
@@ -82,9 +82,27 @@ export function AppProvider({ children }) {
     setLoaded(true);
   }, []);
 
+  // Keep a ref to the latest data so event handlers always access current state
+  const dataRef = useRef(data);
+  dataRef.current = data;
+
   useEffect(() => {
     if (loaded) save(data);
   }, [data, loaded]);
+
+  // Save on page close/reload and tab switch to prevent data loss
+  useEffect(() => {
+    const flush = () => save(dataRef.current);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') flush();
+    };
+    window.addEventListener('beforeunload', flush);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      window.removeEventListener('beforeunload', flush);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, []);
 
   const notify = useCallback((msg, type = 'success') => {
     setToast({ msg, type });
