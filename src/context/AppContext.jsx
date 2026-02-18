@@ -20,6 +20,8 @@ const createUser = (username, name, pass) => ({
   writingGoals: {},
   sprintHistory: [],
   sprintStreak: 0,
+  quizResults: null,
+  completedTasks: [],
 });
 
 const createInitialData = () => ({

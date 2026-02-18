@@ -54,6 +54,32 @@ export default function Settings() {
         </div>
       </div>
 
+      {/* Writer's Profile Quiz */}
+      <div className="bg-slate-800/30 backdrop-blur rounded-xl border border-white/5 p-6">
+        <h2 className="font-semibold mb-4">Writer's Profile</h2>
+        {user.quizResults ? (
+          <div>
+            <p className="text-sm text-slate-400 mb-3">
+              Quiz completed {new Date(user.quizResults.completedAt).toLocaleDateString()}
+            </p>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {user.quizResults.profile?.preferredGenres?.map(g => (
+                <span key={g} className="px-3 py-1 bg-indigo-500/20 text-indigo-300 rounded-full text-xs">{g}</span>
+              ))}
+              {user.quizResults.profile?.strengths?.map(s => (
+                <span key={s} className="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">{s}</span>
+              ))}
+            </div>
+            <button onClick={() => updateUser({ quizResults: null })}
+              className="text-sm bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors text-slate-300">
+              Retake Quiz
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-slate-400">Complete the quiz to see your profile.</p>
+        )}
+      </div>
+
       {/* Appearance */}
       <div className="bg-slate-800/30 backdrop-blur rounded-xl border border-white/5 p-6">
         <h2 className="font-semibold mb-4">Appearance</h2>

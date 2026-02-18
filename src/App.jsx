@@ -13,10 +13,12 @@ import FocusSetup from './components/focus/FocusSetup';
 import FocusMode from './components/focus/FocusMode';
 import CalendarPage from './components/calendar/CalendarPage';
 import Analytics from './components/analytics/Analytics';
+import ExtraToolsPage from './components/tools/ExtraToolsPage';
 import Settings from './components/settings/Settings';
+import WriterQuiz from './components/quiz/WriterQuiz';
 
 function AppContent() {
-  const { user, view, setView, settings } = useApp();
+  const { user, view, setView, settings, updateUser } = useApp();
 
   const themeClass = settings.theme === 'light' ? 'theme-light' : '';
   const fontSizeClass = settings.fontSize === 'small' ? 'text-sm' : settings.fontSize === 'large' ? 'text-lg' : 'text-base';
@@ -33,6 +35,11 @@ function AppContent() {
   const [focusTypewriter, setFocusTypewriter] = useState(false);
 
   if (!user) return <AuthScreen />;
+
+  // Quiz gate: show quiz for users who haven't completed it
+  if (!user.quizResults) {
+    return <WriterQuiz onComplete={(results) => updateUser({ quizResults: results })} />;
+  }
 
   const handleContinueProject = (p) => {
     setEditingProjectId(p.id);
@@ -98,6 +105,7 @@ function AppContent() {
           )}
           {view === 'calendar' && <CalendarPage />}
           {view === 'analytics' && <Analytics />}
+          {view === 'tools' && <ExtraToolsPage />}
           {view === 'settings' && <Settings />}
         </main>
       </div>

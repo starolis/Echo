@@ -11,6 +11,7 @@ const NAV = [
   { id: 'calendar', icon: Icons.calendar, label: 'Calendar' },
   { id: 'assistant', icon: Icons.message, label: 'AI Assistant' },
   { id: 'analytics', icon: Icons.chart, label: 'Analytics' },
+  { id: 'tools', icon: Icons.star, label: 'Extra Tools' },
   { id: 'settings', icon: Icons.settings, label: 'Settings' },
 ];
 
