@@ -88,3 +88,45 @@ export async function generateChatTitle(message) {
   const words = message.split(/\s+/).slice(0, 6).join(' ');
   return words + (message.split(/\s+/).length > 6 ? '...' : '');
 }
+
+/**
+ * AI Grade — calls the Netlify Function proxy
+ */
+export async function performAIGrade(text, rubric, feedbackFormat, context = {}) {
+  if (!text.trim()) {
+    return {
+      overallGrade: null,
+      overallScore: null,
+      categories: [],
+      strengths: [],
+      improvements: [],
+      summary: 'Enter some text to grade.',
+      error: true,
+    };
+  }
+
+  try {
+    const response = await fetch('/.netlify/functions/ai-grade', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, rubric, feedbackFormat, context }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('AI Grade Error:', error);
+    return {
+      overallGrade: null,
+      overallScore: null,
+      categories: [],
+      strengths: [],
+      improvements: [],
+      summary: `Error: ${error.message}. The AI grading service may not be configured yet.`,
+      error: true,
+    };
+  }
+}
