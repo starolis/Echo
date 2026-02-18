@@ -16,6 +16,7 @@ export default function Settings() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => { updateUser({ profileImage: reader.result }); notify('Profile updated'); };
+      reader.onerror = () => notify('Failed to upload image', 'error');
       reader.readAsDataURL(file);
     }
   };

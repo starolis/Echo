@@ -52,7 +52,11 @@ export default function Editor() {
       const result = await performAIEdit(editorContent, selectedTool, toolOptions, {
         genre: user?.genre || 'Literary Fiction',
       });
-      setEditResult(result);
+      if (result.error) {
+        notify(result.feedback || 'Error improving text', 'error');
+      } else {
+        setEditResult(result);
+      }
     } catch (error) {
       notify('Error improving text', 'error');
       console.error(error);

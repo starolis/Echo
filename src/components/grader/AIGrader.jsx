@@ -21,7 +21,7 @@ export default function AIGrader() {
   const history = user?.gradingHistory || [];
 
   const handleImportProject = (projectId) => {
-    const project = user.projects?.find(p => p.id === Number(projectId));
+    const project = user.projects?.find(p => String(p.id) === String(projectId));
     if (project) {
       setText(project.content || '');
       notify(`Imported "${project.title}"`);
@@ -66,7 +66,7 @@ export default function AIGrader() {
         id: Date.now(),
         date: new Date().toISOString(),
         textSnippet: text.slice(0, 50) + (text.length > 50 ? '...' : ''),
-        rubricName: selectedRubric ? RUBRICS.find(r => r.id === selectedRubric)?.name : 'Custom',
+        rubricName: selectedRubric ? (RUBRICS.find(r => r.id === selectedRubric)?.name || 'Unknown Rubric') : 'Custom',
         feedbackFormat,
         overallGrade: data.overallGrade || null,
         overallScore: data.overallScore || null,

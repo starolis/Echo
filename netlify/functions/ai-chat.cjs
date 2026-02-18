@@ -62,6 +62,7 @@ Use this profile to personalize your advice, but don't mention the quiz unless a
     const messages = [];
     const recentHistory = (chatHistory || []).slice(-6);
     for (const m of recentHistory) {
+      if (!m.role || !m.text) continue;
       messages.push({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text });
     }
     messages.push({ role: 'user', content: message });
@@ -83,6 +84,10 @@ Use this profile to personalize your advice, but don't mention the quiz unless a
     if (!response.ok) {
       console.log('claude-sonnet-4-6 failed, falling back to claude-sonnet-4-5-20250929');
       response = await callAnthropic('claude-sonnet-4-5-20250929');
+    }
+    if (!response.ok) {
+      console.log('claude-sonnet-4-5-20250929 failed, falling back to claude-haiku-4-5-20251001');
+      response = await callAnthropic('claude-haiku-4-5-20251001');
     }
 
     if (response.ok) {

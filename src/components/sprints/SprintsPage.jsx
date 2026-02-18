@@ -32,7 +32,7 @@ export default function SprintsPage() {
     if (sprintHistory.length > 0 || currentStreak > 0) {
       updateUser({ sprintHistory, sprintStreak: currentStreak });
     }
-  }, [sprintHistory, currentStreak]);
+  }, [sprintHistory, currentStreak, updateUser]);
 
   useEffect(() => {
     if (sprintRunning && sprintTimeLeft > 0) {

@@ -138,6 +138,10 @@ ${formatInstruction}
       console.log('claude-sonnet-4-6 failed for grade, falling back to claude-sonnet-4-5-20250929');
       response = await callAnthropic('claude-sonnet-4-5-20250929');
     }
+    if (!response.ok) {
+      console.log('claude-sonnet-4-5-20250929 failed for grade, falling back to claude-haiku-4-5-20251001');
+      response = await callAnthropic('claude-haiku-4-5-20251001');
+    }
 
     if (!response.ok) {
       const errorBody = await response.text().catch(() => 'Unknown error');
