@@ -79,7 +79,8 @@ ${vocabInstruction ? `\n**Vocabulary:** ${vocabInstruction}` : ''}
 1. Apply ONLY the selected options
 2. Preserve the author's voice
 3. ${lengthInstruction ? 'Hit the target word count as closely as possible' : 'Make meaningful improvements'}
-4. Return JSON format:
+4. Be THOROUGH — find and fix EVERY issue that matches the selected tool, not just a few. List ALL changes individually.
+5. Return JSON format:
 
 {
   "editedText": "The full edited text",
@@ -90,20 +91,27 @@ ${vocabInstruction ? `\n**Vocabulary:** ${vocabInstruction}` : ''}
   "stats": { "wordsBefore": ${wordCount}, "wordsAfter": number, "changesCount": number }
 }`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 3000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: `Edit this text:\n\n${text}` }]
-      })
-    });
+    const callAnthropic = async (model) => {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model, max_tokens: 3000, system: systemPrompt,
+          messages: [{ role: 'user', content: `Edit this text:\n\n${text}` }]
+        })
+      });
+      return res;
+    };
+
+    let response = await callAnthropic('claude-sonnet-4-6');
+    if (!response.ok) {
+      console.log('claude-sonnet-4-6 failed for edit, falling back to claude-sonnet-4-5-20250929');
+      response = await callAnthropic('claude-sonnet-4-5-20250929');
+    }
 
     if (!response.ok) {
       const errorBody = await response.text().catch(() => 'Unknown error');

@@ -66,20 +66,24 @@ Use this profile to personalize your advice, but don't mention the quiz unless a
     }
     messages.push({ role: 'user', content: message });
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1500,
-        system: systemPrompt,
-        messages: messages
-      })
-    });
+    const callAnthropic = async (model) => {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({ model, max_tokens: 1500, system: systemPrompt, messages })
+      });
+      return res;
+    };
+
+    let response = await callAnthropic('claude-sonnet-4-6');
+    if (!response.ok) {
+      console.log('claude-sonnet-4-6 failed, falling back to claude-sonnet-4-5-20250929');
+      response = await callAnthropic('claude-sonnet-4-5-20250929');
+    }
 
     if (response.ok) {
       const data = await response.json();

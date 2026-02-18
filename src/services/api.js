@@ -53,9 +53,12 @@ export async function sendChatMessage(message, context) {
       if (data.response) {
         return data.response;
       }
+      if (data.apiError) {
+        console.warn('AI Chat API error:', data.apiError);
+      }
     }
   } catch (err) {
-    console.log('API not available, using smart responses');
+    console.warn('API not available, using smart responses:', err.message);
   }
 
   // Smart fallback responses — student's original creative work

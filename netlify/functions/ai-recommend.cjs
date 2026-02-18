@@ -41,20 +41,26 @@ Be encouraging, specific, and reference their actual strengths and goals. Keep e
 
 Please recommend 5 personalized resources or activities.`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userMessage }],
-      }),
-    });
+    const callAnthropic = async (model) => {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model, max_tokens: 1000, system: systemPrompt,
+          messages: [{ role: 'user', content: userMessage }],
+        }),
+      });
+      return res;
+    };
+
+    let response = await callAnthropic('claude-sonnet-4-6');
+    if (!response.ok) {
+      response = await callAnthropic('claude-sonnet-4-5-20250929');
+    }
 
     if (response.ok) {
       const data = await response.json();
