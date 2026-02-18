@@ -1,7 +1,7 @@
 import React from 'react';
 import Icons from '../icons/Icons';
 
-export default function DayDetail({ selectedDate, writingGoals, userWritingGoals, onToggleComplete, onSetGoal }) {
+export default function DayDetail({ selectedDate, writingGoals, onToggleComplete, onSetGoal }) {
   const getDateKey = (date) => date.toISOString().split('T')[0];
 
   if (!selectedDate) {
@@ -14,7 +14,7 @@ export default function DayDetail({ selectedDate, writingGoals, userWritingGoals
   }
 
   const dateKey = getDateKey(selectedDate);
-  const goal = writingGoals[dateKey] || userWritingGoals?.[dateKey];
+  const goal = writingGoals[dateKey];
 
   return (
     <div className="bg-slate-800/30 backdrop-blur rounded-2xl border border-white/5 p-6">

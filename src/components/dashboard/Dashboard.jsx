@@ -10,9 +10,8 @@ const DIFFICULTY_STYLES = {
 };
 
 export default function Dashboard({ onContinueProject, onNewProject }) {
-  const { user, setView, updateUser, notify, getTotalWords } = useApp();
+  const { user, setView, updateUser, notify, totalWords } = useApp();
   const [taskPage, setTaskPage] = useState(0);
-  const totalWords = getTotalWords();
 
   const tasks = useMemo(
     () => generateTasks(user.quizResults?.profile, user.completedTasks || []),

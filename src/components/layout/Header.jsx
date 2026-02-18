@@ -4,8 +4,7 @@ import Icons from '../icons/Icons';
 import EchoLogo from '../../shared/EchoLogo';
 
 export default function Header() {
-  const { user, setView, getTotalWords, sidebarOpen, setSidebarOpen } = useApp();
-  const totalWords = getTotalWords();
+  const { user, setView, totalWords, sidebarOpen, setSidebarOpen } = useApp();
 
   return (
     <header className="relative bg-slate-800/30 backdrop-blur-xl border-b border-white/5 sticky top-0 z-40">

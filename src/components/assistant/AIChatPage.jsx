@@ -7,7 +7,7 @@ import ChatWindow from './ChatWindow';
 import PersonalityModal from './PersonalityModal';
 
 export default function AIChatPage() {
-  const { user, updateUser, notify, getTotalWords } = useApp();
+  const { user, updateUser, notify, totalWords } = useApp();
 
   const [aiInput, setAiInput] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
@@ -96,7 +96,7 @@ export default function AIChatPage() {
       userName: user.name,
       genre: user.genre || 'Literary Fiction',
       projectCount: user.projects?.length || 0,
-      wordCount: getTotalWords(),
+      wordCount: totalWords,
       personality: aiPersonality,
       customContext: aiCustomContext,
       useEmojis: aiUseEmojis,

@@ -9,37 +9,32 @@ export default function CalendarPage() {
 
   const [calendarMonth, setCalendarMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
-  // Bug fix #6: Use user.writingGoals as single source of truth
-  const [writingGoals, setWritingGoals] = useState(user?.writingGoals || {});
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [goalForm, setGoalForm] = useState({ type: 'words', target: 500, time: '', description: '', notes: '' });
 
+  const writingGoals = user?.writingGoals || {};
   const getDateKey = (date) => date.toISOString().split('T')[0];
 
   const saveGoal = () => {
     if (!selectedDate) return;
     const key = getDateKey(selectedDate);
     const updatedGoals = { ...writingGoals, [key]: { ...goalForm, completed: false } };
-    setWritingGoals(updatedGoals);
     updateUser({ writingGoals: updatedGoals });
     setShowGoalModal(false);
     notify('Goal saved!');
   };
 
   const toggleGoalComplete = (dateKey) => {
-    const goal = writingGoals[dateKey] || user?.writingGoals?.[dateKey];
+    const goal = writingGoals[dateKey];
     if (!goal) return;
     const updated = { ...goal, completed: !goal.completed };
-    const updatedGoals = { ...writingGoals, [dateKey]: updated };
-    setWritingGoals(updatedGoals);
-    updateUser({ writingGoals: updatedGoals });
+    updateUser({ writingGoals: { ...writingGoals, [dateKey]: updated } });
   };
 
   // Monthly stats
   const monthStart = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
   const monthEnd = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0);
-  const allGoals = { ...user?.writingGoals, ...writingGoals };
-  const monthGoals = Object.entries(allGoals).filter(([key]) => {
+  const monthGoals = Object.entries(writingGoals).filter(([key]) => {
     const date = new Date(key);
     return date >= monthStart && date <= monthEnd;
   });
@@ -58,14 +53,12 @@ export default function CalendarPage() {
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
           writingGoals={writingGoals}
-          userWritingGoals={user?.writingGoals}
         />
 
         <div className="space-y-4">
           <DayDetail
             selectedDate={selectedDate}
             writingGoals={writingGoals}
-            userWritingGoals={user?.writingGoals}
             onToggleComplete={toggleGoalComplete}
             onSetGoal={() => setShowGoalModal(true)}
           />

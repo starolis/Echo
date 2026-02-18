@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { save, load } from '../services/storage';
 import { DEFAULT_SETTINGS } from '../constants/settings';
 
@@ -78,7 +78,16 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     const saved = load();
-    if (saved) setData(saved);
+    if (saved) {
+      // Patch legacy user objects with any missing fields
+      Object.values(saved.users || {}).forEach(u => {
+        if (u.completedTasks === undefined) u.completedTasks = [];
+        if (u.quizResults === undefined) u.quizResults = null;
+        if (u.lastLogin === undefined) u.lastLogin = null;
+        if (u.loginCount === undefined) u.loginCount = 0;
+      });
+      setData(saved);
+    }
     setLoaded(true);
   }, []);
 
@@ -87,7 +96,10 @@ export function AppProvider({ children }) {
   dataRef.current = data;
 
   useEffect(() => {
-    if (loaded) save(data);
+    if (loaded) {
+      const ok = save(data);
+      if (!ok) notify('Warning: Could not save your data. Storage may be full.', 'error');
+    }
   }, [data, loaded]);
 
   // Save on page close/reload and tab switch to prevent data loss
@@ -104,9 +116,11 @@ export function AppProvider({ children }) {
     };
   }, []);
 
+  const toastTimer = useRef(null);
   const notify = useCallback((msg, type = 'success') => {
+    clearTimeout(toastTimer.current);
     setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
+    toastTimer.current = setTimeout(() => setToast(null), 3000);
   }, []);
 
   const updateUser = useCallback((changes) => {
@@ -125,7 +139,7 @@ export function AppProvider({ children }) {
     });
   }, []);
 
-  const getTotalWords = useCallback(() =>
+  const totalWords = useMemo(() =>
     user?.projects?.reduce((s, p) => s + (p.content?.split(/\s+/).filter(w => w).length || 0), 0) || 0,
   [user?.projects]);
 
@@ -167,7 +181,7 @@ export function AppProvider({ children }) {
   const value = {
     data, user, view, setView,
     toast, notify,
-    updateUser, getTotalWords,
+    updateUser, totalWords,
     handleLogin, handleRegister, handleLogout,
     settings,
     sidebarOpen, setSidebarOpen,

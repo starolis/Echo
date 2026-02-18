@@ -1,7 +1,7 @@
 import React from 'react';
 import Icons from '../icons/Icons';
 
-export default function CalendarGrid({ calendarMonth, setCalendarMonth, selectedDate, setSelectedDate, writingGoals, userWritingGoals }) {
+export default function CalendarGrid({ calendarMonth, setCalendarMonth, selectedDate, setSelectedDate, writingGoals }) {
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -26,7 +26,7 @@ export default function CalendarGrid({ calendarMonth, setCalendarMonth, selected
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), day);
     const dateKey = getDateKey(date);
-    const goal = writingGoals[dateKey] || userWritingGoals?.[dateKey];
+    const goal = writingGoals[dateKey];
     const isToday = date.toDateString() === today.toDateString();
     const isSelected = selectedDate?.toDateString() === date.toDateString();
     const isPast = date < startOfToday;

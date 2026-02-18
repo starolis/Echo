@@ -2,8 +2,7 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 
 export default function Analytics() {
-  const { user, getTotalWords } = useApp();
-  const totalWords = getTotalWords();
+  const { user, totalWords } = useApp();
 
   // Bug fix #8: Both plans have analytics, no lock needed
   return (
