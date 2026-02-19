@@ -71,13 +71,21 @@ export default function Settings() {
                 <span key={s} className="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">{s}</span>
               ))}
             </div>
-            <button onClick={() => updateUser({ quizResults: null, completedTasks: [] })}
+            <button onClick={() => updateUser({ quizResults: null, quizSkipped: false, completedTasks: [] })}
               className="text-sm bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors text-slate-300">
               Retake Quiz
             </button>
           </div>
         ) : (
-          <p className="text-sm text-slate-400">Complete the quiz to see your profile.</p>
+          <div>
+            <p className="text-sm text-slate-400 mb-3">
+              {user.quizSkipped ? 'You skipped the quiz. Take it anytime to personalize your experience.' : 'Complete the quiz to see your profile.'}
+            </p>
+            <button onClick={() => updateUser({ quizSkipped: false, quizResults: null })}
+              className="text-sm bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-4 py-2 rounded-lg transition-colors text-white">
+              Take Quiz
+            </button>
+          </div>
         )}
       </div>
 

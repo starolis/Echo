@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { QUIZ_QUESTIONS, buildProfileFromAnswers } from '../../constants/quizQuestions';
 import Icons from '../icons/Icons';
 
-export default function WriterQuiz({ onComplete }) {
+export default function WriterQuiz({ onComplete, onSkip }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState({});
 
@@ -111,6 +111,15 @@ export default function WriterQuiz({ onComplete }) {
               {isLast ? 'Complete Quiz' : 'Next'}
             </button>
           </div>
+
+          {/* Skip option */}
+          {onSkip && (
+            <div className="text-center mt-6">
+              <button onClick={onSkip} className="text-slate-500 hover:text-slate-300 text-sm transition-colors">
+                Skip for now — I'll do this later
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

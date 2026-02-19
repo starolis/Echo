@@ -52,9 +52,14 @@ function AppContent() {
 
   if (!user) return <AuthScreen />;
 
-  // Quiz gate: show quiz for users who haven't completed it
-  if (!user.quizResults) {
-    return <WriterQuiz onComplete={(results) => updateUser({ quizResults: results })} />;
+  // Quiz gate: show quiz for users who haven't completed or skipped it
+  if (!user.quizResults && !user.quizSkipped) {
+    return (
+      <WriterQuiz
+        onComplete={(results) => updateUser({ quizResults: results })}
+        onSkip={() => updateUser({ quizSkipped: true })}
+      />
+    );
   }
 
   const handleContinueProject = (p) => {

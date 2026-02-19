@@ -26,6 +26,7 @@ const createUser = (username, name, pass) => ({
   loginCount: 0,
   gradingHistory: [],
   preferredGradeFormat: 'report-card',
+  quizSkipped: false,
 });
 
 const createInitialData = () => ({
@@ -89,6 +90,7 @@ export function AppProvider({ children }) {
         if (u.loginCount === undefined) u.loginCount = 0;
           if (u.gradingHistory === undefined) u.gradingHistory = [];
           if (u.preferredGradeFormat === undefined) u.preferredGradeFormat = 'report-card';
+        if (u.quizSkipped === undefined) u.quizSkipped = false;
       });
       setData(saved);
     }
