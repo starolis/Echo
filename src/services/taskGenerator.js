@@ -36,15 +36,39 @@ const TASK_TEMPLATES = [
   { signal: 'growth', match: 'confidence', title: 'Celebrate a Win', description: 'Reread something you wrote and highlight what you like about it.', difficulty: 'easy', view: 'projects' },
 ];
 
-// Always-available fallback tasks
+// Always-available fallback tasks (large pool to always fill 7 slots)
 const FALLBACK_TASKS = [
   { title: 'Free Write for 10 Minutes', description: 'Open the editor and write whatever comes to mind. No editing allowed!', difficulty: 'easy', view: 'editor' },
   { title: 'Start a Writing Sprint', description: 'Challenge yourself with a timed writing sprint.', difficulty: 'medium', view: 'sprints' },
   { title: 'Chat with Your AI Assistant', description: 'Ask Echo for a writing prompt or creative advice.', difficulty: 'easy', view: 'assistant' },
+  { title: 'Grade Your Writing', description: 'Use the AI Grader to get feedback on a piece of writing.', difficulty: 'easy', view: 'grader' },
+  { title: 'Try Focus Mode', description: 'Write distraction-free with ambient sounds in Focus Mode.', difficulty: 'easy', view: 'focus' },
+  { title: 'Set a Calendar Goal', description: 'Pick a day on the calendar and set a writing goal for yourself.', difficulty: 'easy', view: 'calendar' },
+  { title: 'Explore Writing Contests', description: 'Browse the Extra Tools page for contests that match your interests.', difficulty: 'easy', view: 'tools' },
+  { title: 'Write a Poem', description: 'Open the editor and write a short poem about something you see right now.', difficulty: 'medium', view: 'editor' },
+  { title: 'Describe Your Favorite Place', description: 'Write a vivid paragraph about a place that makes you happy.', difficulty: 'easy', view: 'editor' },
+  { title: 'Write a Letter to Your Future Self', description: 'Open a new project and write a letter to yourself one year from now.', difficulty: 'easy', view: 'projects' },
+  { title: 'Try the Enhance Tool', description: 'Paste a paragraph into the Editor and use the Enhance tool to improve it.', difficulty: 'easy', view: 'editor' },
+  { title: 'Create a Character', description: 'Write a short character sketch: name, age, biggest fear, and a secret.', difficulty: 'medium', view: 'editor' },
+  { title: 'Write a Six-Word Story', description: 'Challenge: tell a complete story in exactly six words.', difficulty: 'hard', view: 'editor' },
+  { title: 'Start a New Project', description: 'Create a brand new project with a title and opening paragraph.', difficulty: 'easy', view: 'projects' },
+  { title: 'Do a 5-Minute Sprint', description: 'Set the timer to 5 minutes and write as fast as you can.', difficulty: 'easy', view: 'sprints' },
+  { title: 'Ask for a Writing Prompt', description: 'Ask the AI Assistant to give you a creative writing prompt.', difficulty: 'easy', view: 'assistant' },
+  { title: 'Review Your Analytics', description: 'Check the Analytics page to see your writing progress.', difficulty: 'easy', view: 'analytics' },
+  { title: 'Write a Conversation', description: 'Write a dialogue between two people who disagree about something small.', difficulty: 'medium', view: 'editor' },
+  { title: 'Rewrite a Scene', description: 'Pick something you already wrote and rewrite it from a different perspective.', difficulty: 'hard', view: 'editor' },
+  { title: 'Write About Today', description: 'Write a short journal entry about what happened today.', difficulty: 'easy', view: 'editor' },
 ];
 
+const TARGET_TASK_COUNT = 7;
+
 export function generateTasks(profile, completedTaskTitles = []) {
-  if (!profile) return FALLBACK_TASKS;
+  const completed = new Set(completedTaskTitles);
+
+  if (!profile) {
+    const tasks = FALLBACK_TASKS.filter(t => !completed.has(t.title));
+    return tasks.slice(0, TARGET_TASK_COUNT);
+  }
 
   const matched = [];
   const profileSignals = {
@@ -61,21 +85,22 @@ export function generateTasks(profile, completedTaskTitles = []) {
       v.toLowerCase().includes(template.match.toLowerCase()) ||
       template.match.toLowerCase().includes(v.toLowerCase())
     );
-    if (matches && !completedTaskTitles.includes(template.title)) {
+    if (matches && !completed.has(template.title)) {
       matched.push(template);
     }
   }
 
-  // Return up to 5 tasks, mixing in fallbacks if needed
-  const tasks = matched.slice(0, 5);
-  if (tasks.length < 3) {
-    for (const fallback of FALLBACK_TASKS) {
-      if (tasks.length >= 3) break;
-      if (!completedTaskTitles.includes(fallback.title) && !tasks.find(t => t.title === fallback.title)) {
-        tasks.push(fallback);
-      }
+  // Always return exactly 7 tasks, filling from fallbacks as needed
+  const tasks = matched.slice(0, TARGET_TASK_COUNT);
+  const usedTitles = new Set(tasks.map(t => t.title));
+
+  for (const fallback of FALLBACK_TASKS) {
+    if (tasks.length >= TARGET_TASK_COUNT) break;
+    if (!completed.has(fallback.title) && !usedTitles.has(fallback.title)) {
+      tasks.push(fallback);
+      usedTitles.add(fallback.title);
     }
   }
 
-  return tasks;
+  return tasks.slice(0, TARGET_TASK_COUNT);
 }

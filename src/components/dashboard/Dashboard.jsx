@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import Icons from '../icons/Icons';
 import { generateTasks } from '../../services/taskGenerator';
@@ -11,7 +11,6 @@ const DIFFICULTY_STYLES = {
 
 export default function Dashboard({ onContinueProject, onNewProject }) {
   const { user, setView, updateUser, notify, totalWords } = useApp();
-  const [taskPage, setTaskPage] = useState(0);
 
   const tasks = useMemo(
     () => generateTasks(user.quizResults?.profile, user.completedTasks || []),
@@ -65,49 +64,30 @@ export default function Dashboard({ onContinueProject, onNewProject }) {
       </div>
 
       {/* Personalized Tasks */}
-      {tasks.length > 0 && (() => {
-        const TASKS_PER_PAGE = 3;
-        const totalPages = Math.ceil(tasks.length / TASKS_PER_PAGE);
-        const visible = tasks.slice(taskPage * TASKS_PER_PAGE, (taskPage + 1) * TASKS_PER_PAGE);
-
-        return (
-          <div className="bg-slate-800/30 backdrop-blur rounded-xl border border-white/5 overflow-hidden">
-            <div className="p-4 border-b border-white/5 flex items-center justify-between">
-              <h2 className="font-semibold">Suggested for You</h2>
-              {totalPages > 1 && (
-                <div className="flex items-center gap-2">
-                  <button onClick={() => setTaskPage(p => Math.max(0, p - 1))} disabled={taskPage === 0}
-                    className={`p-1 rounded ${taskPage === 0 ? 'text-slate-600' : 'text-slate-400 hover:text-white'}`}>
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
-                  </button>
-                  <span className="text-xs text-slate-500">{taskPage + 1}/{totalPages}</span>
-                  <button onClick={() => setTaskPage(p => Math.min(totalPages - 1, p + 1))} disabled={taskPage >= totalPages - 1}
-                    className={`p-1 rounded ${taskPage >= totalPages - 1 ? 'text-slate-600' : 'text-slate-400 hover:text-white'}`}>
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="divide-y divide-white/5">
-              {visible.map(task => (
-                <div key={task.title} className="p-4 flex items-center gap-4 hover:bg-white/5 transition-colors">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-medium">{task.title}</p>
-                      <span className={`px-2 py-0.5 rounded-full text-xs ${DIFFICULTY_STYLES[task.difficulty]}`}>{task.difficulty}</span>
-                    </div>
-                    <p className="text-sm text-slate-400">{task.description}</p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button onClick={() => setView(task.view)} className="text-sm bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg transition-colors">Go</button>
-                    <button onClick={() => handleCompleteTask(task.title)} className="text-sm bg-white/5 hover:bg-white/10 text-slate-400 px-3 py-1.5 rounded-lg transition-colors">Done</button>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {tasks.length > 0 && (
+        <div className="bg-slate-800/30 backdrop-blur rounded-xl border border-white/5 overflow-hidden">
+          <div className="p-4 border-b border-white/5">
+            <h2 className="font-semibold">Suggested for You</h2>
           </div>
-        );
-      })()}
+          <div className="divide-y divide-white/5">
+            {tasks.map(task => (
+              <div key={task.title} className="p-4 flex items-center gap-4 hover:bg-white/5 transition-colors">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="font-medium">{task.title}</p>
+                    <span className={`px-2 py-0.5 rounded-full text-xs ${DIFFICULTY_STYLES[task.difficulty]}`}>{task.difficulty}</span>
+                  </div>
+                  <p className="text-sm text-slate-400">{task.description}</p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button onClick={() => setView(task.view)} className="text-sm bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-3 py-1.5 rounded-lg transition-colors">Go</button>
+                  <button onClick={() => handleCompleteTask(task.title)} className="text-sm bg-white/5 hover:bg-white/10 text-slate-400 px-3 py-1.5 rounded-lg transition-colors">Done</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid sm:grid-cols-2 gap-4">
         {[
