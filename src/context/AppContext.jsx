@@ -150,31 +150,32 @@ export function AppProvider({ children }) {
   [user?.projects]);
 
   const handleLogin = (username, password) => {
-    const u = data.users[username];
+    const key = username.trim().toLowerCase();
+    const u = data.users[key];
     if (u && u.pass === password) {
       const now = new Date().toISOString();
       const updated = { ...u, lastLogin: now, loginCount: (u.loginCount || 0) + 1 };
-      setData(d => ({ ...d, users: { ...d.users, [username]: updated } }));
+      setData(d => ({ ...d, users: { ...d.users, [key]: updated } }));
       setUser(updated);
       return true;
     }
-    notify('Invalid credentials', 'error');
     return false;
   };
 
   const handleRegister = (username, password, name) => {
-    if (!username || !password || !name) {
+    const key = username.trim().toLowerCase();
+    if (!key || !password || !name) {
       notify('Please fill all fields', 'error');
       return false;
     }
-    if (data.users[username]) {
+    if (data.users[key]) {
       notify('Username taken', 'error');
       return false;
     }
-    const newUser = createUser(username, name, password);
+    const newUser = createUser(key, name, password);
     const now = new Date().toISOString();
     const withLogin = { ...newUser, lastLogin: now, loginCount: 1 };
-    setData(prev => ({ ...prev, users: { ...prev.users, [username]: withLogin } }));
+    setData(prev => ({ ...prev, users: { ...prev.users, [key]: withLogin } }));
     setUser(withLogin);
     notify('Welcome to Echo!');
     return true;

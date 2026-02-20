@@ -6,19 +6,33 @@ export default function AuthScreen() {
   const { handleLogin, handleRegister } = useApp();
   const [authMode, setAuthMode] = useState('login');
   const [form, setForm] = useState({ username: '', password: '', name: '' });
+  const [error, setError] = useState('');
 
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+    const username = form.username.trim().toLowerCase();
+    const password = form.password;
+
+    if (!username || !password) {
+      setError('Please enter a username and password.');
+      return;
+    }
+
     if (authMode === 'login') {
-      handleLogin(form.username, form.password);
+      const success = handleLogin(username, password);
+      if (!success) setError('Invalid username or password.');
     } else {
-      if (handleRegister(form.username, form.password, form.name)) {
+      if (!form.name.trim()) {
+        setError('Please enter a display name.');
+        return;
+      }
+      if (handleRegister(username, password, form.name.trim())) {
         setForm({ username: '', password: '', name: '' });
+      } else {
+        setError('Username is already taken.');
       }
     }
-  };
-
-  const onKeyDown = (e) => {
-    if (e.key === 'Enter') onSubmit();
   };
 
   return (
@@ -43,16 +57,19 @@ export default function AuthScreen() {
           ))}
         </div>
 
-        <div className="space-y-4">
-          <input type="text" value={form.username} onChange={e => setForm({...form, username: e.target.value})} onKeyDown={onKeyDown} className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Username" />
-          <input type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} onKeyDown={onKeyDown} className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Password" />
+        <form onSubmit={onSubmit} className="space-y-4">
+          <input type="text" value={form.username} onChange={e => { setForm({...form, username: e.target.value}); setError(''); }} autoComplete="username" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Username" />
+          <input type="password" value={form.password} onChange={e => { setForm({...form, password: e.target.value}); setError(''); }} autoComplete={authMode === 'login' ? 'current-password' : 'new-password'} className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Password" />
           {authMode === 'register' && (
-            <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} onKeyDown={onKeyDown} className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Display Name" />
+            <input type="text" value={form.name} onChange={e => { setForm({...form, name: e.target.value}); setError(''); }} autoComplete="name" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="Display Name" />
           )}
-          <button onClick={onSubmit} className="w-full bg-gradient-to-r from-indigo-600 via-indigo-800 to-slate-900 hover:from-indigo-500 hover:via-indigo-700 hover:to-slate-800 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-indigo-500/20 ring-1 ring-indigo-500/30">
+          {error && (
+            <p className="text-red-400 text-sm text-center">{error}</p>
+          )}
+          <button type="submit" className="w-full bg-gradient-to-r from-indigo-600 via-indigo-800 to-slate-900 hover:from-indigo-500 hover:via-indigo-700 hover:to-slate-800 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-indigo-500/20 ring-1 ring-indigo-500/30">
             {authMode === 'login' ? 'Sign In' : 'Get Started'}
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
