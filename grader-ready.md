@@ -1,0 +1,125 @@
+- generic [ref=e22]:
+  - banner [ref=e23]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - button [ref=e26] [cursor=pointer]:
+          - img [ref=e27]
+        - generic [ref=e28] [cursor=pointer]:
+          - img [ref=e29]
+          - generic [ref=e36]: Echo
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - img [ref=e39]
+          - generic [ref=e42]: 58 words
+        - generic [ref=e44] [cursor=pointer]: C
+  - generic [ref=e45]:
+    - complementary [ref=e46]:
+      - navigation [ref=e47]:
+        - button "Dashboard" [ref=e48] [cursor=pointer]:
+          - img [ref=e49]
+          - generic [ref=e52]: Dashboard
+        - button "Editor" [ref=e53] [cursor=pointer]:
+          - img [ref=e54]
+          - generic [ref=e57]: Editor
+        - button "Projects" [ref=e58] [cursor=pointer]:
+          - img [ref=e59]
+          - generic [ref=e61]: Projects
+        - button "Writing Sprints" [ref=e62] [cursor=pointer]:
+          - img [ref=e63]
+          - generic [ref=e68]: Writing Sprints
+        - button "Focus Mode" [ref=e69] [cursor=pointer]:
+          - img [ref=e70]
+          - generic [ref=e74]: Focus Mode
+        - button "Calendar" [ref=e75] [cursor=pointer]:
+          - img [ref=e76]
+          - generic [ref=e78]: Calendar
+        - button "AI Assistant" [ref=e79] [cursor=pointer]:
+          - img [ref=e80]
+          - generic [ref=e82]: AI Assistant
+        - button "Analytics" [ref=e83] [cursor=pointer]:
+          - img [ref=e84]
+          - generic [ref=e85]: Analytics
+        - button "AI Grader" [ref=e86] [cursor=pointer]:
+          - img [ref=e87]
+          - generic [ref=e90]: AI Grader
+        - button "Extra Tools" [ref=e91] [cursor=pointer]:
+          - img [ref=e92]
+          - generic [ref=e94]: Extra Tools
+        - button "Settings" [ref=e95] [cursor=pointer]:
+          - img [ref=e96]
+          - generic [ref=e99]: Settings
+        - separator [ref=e100]
+        - button "Sign Out" [ref=e101] [cursor=pointer]:
+          - img [ref=e102]
+          - generic [ref=e105]: Sign Out
+    - main [ref=e106]:
+      - generic [ref=e186]:
+        - generic [ref=e187]:
+          - heading "AI Grader" [level=1] [ref=e188]
+          - generic [ref=e189]:
+            - button "New Grade" [ref=e190] [cursor=pointer]:
+              - img [ref=e191]
+              - text: New Grade
+            - button "History" [ref=e194] [cursor=pointer]:
+              - img [ref=e195]
+              - text: History
+        - generic [ref=e196]:
+          - generic [ref=e197]:
+            - generic [ref=e198]:
+              - generic [ref=e199]: Your Writing
+              - combobox [ref=e200]:
+                - option "Import from project..." [disabled] [selected]
+                - option "The Weight of Silence"
+            - textbox "Paste or write your text here..." [ref=e201]: Professor Elena Marsh had spent thirty years studying the architecture of language—how words built bridges between minds, how syntax could shelter or expose. Now, staring at the hospital ceiling, she understood that some spaces could only be filled with silence. The stroke had taken her speech but left her mind intact, a cruel precision that felt almost personal.
+            - paragraph [ref=e202]: 58 words
+          - generic [ref=e203]:
+            - generic [ref=e204]:
+              - heading "Rubric" [level=3] [ref=e205]
+              - button "Custom Criteria Write your own grading criteria" [ref=e206] [cursor=pointer]:
+                - generic [ref=e207]:
+                  - img [ref=e208]
+                  - generic [ref=e211]: Custom Criteria
+                - paragraph [ref=e212]: Write your own grading criteria
+              - textbox "Describe what to grade on... e.g., creativity, use of metaphor, stays under 500 words, has a clear theme" [active] [ref=e213]: creativity, use of metaphor, emotional impact
+              - generic [ref=e214]: "Or choose a template:"
+              - generic [ref=e215]:
+                - button "Grammar & Mechanics Spelling, punctuation, capitalization, and sentence structure" [ref=e216] [cursor=pointer]:
+                  - generic [ref=e217]:
+                    - img [ref=e218]
+                    - generic [ref=e220]: Grammar & Mechanics
+                  - paragraph [ref=e221]: Spelling, punctuation, capitalization, and sentence structure
+                - button "Vocabulary & Word Choice Word variety, precise language, and sensory details" [ref=e222] [cursor=pointer]:
+                  - generic [ref=e223]:
+                    - img [ref=e224]
+                    - generic [ref=e227]: Vocabulary & Word Choice
+                  - paragraph [ref=e228]: Word variety, precise language, and sensory details
+                - button "Story Structure Beginning, middle, end, pacing, conflict, and resolution" [ref=e229] [cursor=pointer]:
+                  - generic [ref=e230]:
+                    - img [ref=e231]
+                    - generic [ref=e233]: Story Structure
+                  - paragraph [ref=e234]: Beginning, middle, end, pacing, conflict, and resolution
+                - button "Character Development Character depth, motivation, growth, and believability" [ref=e235] [cursor=pointer]:
+                  - generic [ref=e236]:
+                    - img [ref=e237]
+                    - generic [ref=e240]: Character Development
+                  - paragraph [ref=e241]: Character depth, motivation, growth, and believability
+                - button "Dialogue Natural speech, attribution, and advancing plot through conversation" [ref=e242] [cursor=pointer]:
+                  - generic [ref=e243]:
+                    - img [ref=e244]
+                    - generic [ref=e246]: Dialogue
+                  - paragraph [ref=e247]: Natural speech, attribution, and advancing plot through conversation
+            - generic [ref=e248]:
+              - heading "Feedback Style" [level=3] [ref=e249]
+              - generic [ref=e250]:
+                - button "Report Card Letter grades with category scores" [ref=e251] [cursor=pointer]:
+                  - text: Report Card
+                  - paragraph [ref=e252]: Letter grades with category scores
+                - button "Written Feedback Teacher-style narrative comments" [ref=e253] [cursor=pointer]:
+                  - text: Written Feedback
+                  - paragraph [ref=e254]: Teacher-style narrative comments
+                - button "Rubric Table Scored grid (1-4 per criterion)" [ref=e255] [cursor=pointer]:
+                  - text: Rubric Table
+                  - paragraph [ref=e256]: Scored grid (1-4 per criterion)
+            - button "Grade My Work" [ref=e257] [cursor=pointer]:
+              - img [ref=e258]
+              - text: Grade My Work
